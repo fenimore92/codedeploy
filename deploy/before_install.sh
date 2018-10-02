@@ -13,6 +13,11 @@ yum install -y git
 # Remove current apache & php
 yum -y remove httpd* php*
 
+wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+wget http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+rpm -Uvh remi-release-7.rpm epel-release-latest-7.noarch.rpm
+subscription-manager repos --enable=rhel-7-server-optional-rpms
+
 # Install PHP 7.1
 yum install -y php71 php71-cli php71-fpm php71-mysql php71-xml php71-curl php71-opcache php71-pdo php71-gd php71-pecl-apcu php71-mbstring php71-imap php71-pecl-redis php71-mcrypt php71-mysqlnd mod24_ssl
 
