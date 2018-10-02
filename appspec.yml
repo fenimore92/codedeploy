@@ -9,6 +9,9 @@ hooks:
       timeout: 300
       runas: root
   AfterInstall:
-    - location: deploy/restart_server.sh
+    - location: deploy/deploy_laravel.sh
+      timeout: 300
+      runas: root
+    - location: deploy/change_permissions.sh
       timeout: 300
       runas: root
