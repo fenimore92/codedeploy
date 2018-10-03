@@ -8,3 +8,18 @@ hooks:
     - location: deploy/before_install.sh
       timeout: 300
       runas: root
+  AfterInstall:
+    - location: deploy/deploy_laravel.sh
+      timeout: 300
+      runas: root
+    - location: deploy/change_permissions.sh
+      timeout: 300
+      runas: root
+  ApplicationStart:
+    - location: deploy/start_server.sh
+      timeout: 120
+      runas: root
+  ApplicationStop:
+    - location: deploy/stop_server.sh
+      timeout: 120
+      runas: root

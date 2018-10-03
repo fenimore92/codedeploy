@@ -1,5 +1,5 @@
 #!/bin/bash
-isExistHttps = `pgrep httpd`
+isExistHttps = `pgrep apache2`
 if [[ -n  $isExistHttps ]]; then
-    service httpd stop
+    service apache2 stop
 fi

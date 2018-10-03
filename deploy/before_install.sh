@@ -3,51 +3,48 @@
 # Exit on error
 set -o errexit -o pipefail
 
-# Update yum
-yum update -y
+# Update apt-get
+apt-get update -y
 
 # Install packages
-yum install -y curl
-yum install -y git
+apt-get install -y curl
+apt-get install -y git
 
 # Remove current apache & php
-yum -y remove httpd* php*
-
-wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-wget http://rpms.remirepo.net/enterprise/remi-release-7.rpm
-rpm -Uvh remi-release-7.rpm epel-release-latest-7.noarch.rpm
-subscription-manager repos --enable=rhel-7-server-optional-rpms
-
-# Install PHP 7.1
-yum install -y php71 php71-cli php71-fpm php71-mysql php71-xml php71-curl php71-opcache php71-pdo php71-gd php71-pecl-apcu php71-mbstring php71-imap php71-pecl-redis php71-mcrypt php71-mysqlnd mod24_ssl
+apt-get -y remove apache2* php*
 
 # Install Apache 2.4
-yum -y install httpd24
+apt-get -y install apache2
+
+apt-get -y install python-software-properties
+add-apt-repository -y ppa:ondrej/php
+
+apt-get -y update
+
+# Install PHP 7.1
+apt-get -y install php7.1 php7.1-xml php7.1-mbstring php7.1-mysql php7.1-json php7.1-curl php7.1-cli php7.1-common php7.1-mcrypt php7.1-gd libapache2-mod-php7.1 php7.1-zip
 
 # Allow URL rewrites
-sed -i 's#AllowOverride None#AllowOverride All#' /etc/httpd/conf/httpd.conf
+#sed -i 's#AllowOverride None#AllowOverride All#' /etc/apache2/conf/httpd.conf
 
 # Change apache document root
 mkdir -p /var/www/html/public
-sed -i 's#DocumentRoot "/var/www/html"#DocumentRoot "/var/www/html/public"#' /etc/httpd/conf/httpd.conf
+sed -i 's#DocumentRoot /var/www/html#DocumentRoot /var/www/html/public#' /etc/apache2/sites-available/000-default.conf
 
 # Change apache directory index
-sed -e 's/DirectoryIndex.*/DirectoryIndex index.html index.php/' -i /etc/httpd/conf/httpd.conf
+sed -e 's/DirectoryIndex.*/DirectoryIndex index.html index.php/' -i /etc/apache2/mods-enabled/dir.conf
 
 # Get Composer, and install to /usr/local/bin
-if [ ! -f "/usr/local/bin/composer" ]; then
+if [ ! -f "/usr/bin/composer" ]; then
     php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
     php composer-setup.php --install-dir=/usr/bin --filename=composer
     php -r "unlink('composer-setup.php');"
 else
-    /usr/local/bin/composer self-update --stable --no-ansi --no-interaction
+    /usr/bin/composer self-update --stable --no-ansi --no-interaction
 fi
 
 # Restart apache
-service httpd start
-
-# Setup apache to start on boot
-chkconfig httpd on
+service apache2 start
 
 # Ensure aws-cli is installed and configured
 if [ ! -f "/usr/bin/aws" ]; then
