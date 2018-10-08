@@ -52,7 +52,8 @@ echo '[before_install.sh] linea 51' >> /home/ubuntu/mylog.log
 
 # Change apache document root
 mkdir -p /var/www/html/public
-sed -i 's#\<DocumentRoot /var/www/html\>#DocumentRoot /var/www/html/public#' /etc/apache2/sites-available/000-default.conf
+sed -i 's#DocumentRoot /var/www/html*#DocumentRoot /var/www/html/public#' /etc/apache2/sites-available/000-default.conf
+sed -i 's#/public/public#/public#' /etc/apache2/sites-available/000-default.conf
 
 echo '[before_install.sh] linea 57' >> /home/ubuntu/mylog.log
 
