@@ -61,8 +61,6 @@ sed -e 's/DirectoryIndex.*/DirectoryIndex index.html index.php/' -i /etc/apache2
 
 echo '[before_install.sh] linea 62' >> /home/ubuntu/mylog.log
 
-service apache2 reload
-
 echo '[before_install.sh] linea 66' >> /home/ubuntu/mylog.log
 
 # Get Composer, and install to /usr/local/bin
